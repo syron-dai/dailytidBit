@@ -25,7 +25,7 @@ if history_path.exists():
         history = json.load(f)
 else:
     history = []
-    
+
 def story_items_to_html(items):
     if not items:
         return "<p>No items available today.</p>"
@@ -48,12 +48,13 @@ def bullets_to_html(items):
 def review_to_html(phrase, meaning):
     if not phrase:
         return ""
-    return f'''
+    return f"""
     <div class="review-box">
       <p class="meta">Quick review</p>
       <p><strong>{phrase}</strong> — {meaning}</p>
     </div>
-    '''
+    """
+
 def money_card_to_html(title, summary, enabled):
     if not enabled:
         return ""
@@ -64,7 +65,7 @@ def money_card_to_html(title, summary, enabled):
       <p>{summary}</p>
     </section>
     """
-    
+
 home_template = (templates_dir / "home.html").read_text(encoding="utf-8")
 archive_template = (templates_dir / "archive.html").read_text(encoding="utf-8")
 styles = (assets_dir / "styles.css").read_text(encoding="utf-8")
@@ -80,24 +81,22 @@ def render(template, data):
     return output
 
 root_page_data = latest.copy()
-
 root_page_data.update({
     "styles_path": "./assets/styles.css",
     "script_path": "./assets/app.js",
     "home_path": "./index.html",
     "archive_path": "./archive/index.html",
-    "at_a_glance_html": latest.get("at_a_glance_html", ""),
     "world_items_html": story_items_to_html(latest.get("world_items", [])),
     "sg_items_html": story_items_to_html(latest.get("sg_items", [])),
     "book_lessons_html": bullets_to_html(latest.get("book_lessons", [])),
-    "money_card_html": money_card_to_html(
-    latest.get("money_title", ""),
-    latest.get("money_summary", ""),
-    latest.get("money_enabled", False)
-),
     "language_review_html": review_to_html(
         latest.get("language_review_phrase", ""),
         latest.get("language_review_meaning", "")
+    ),
+    "money_card_html": money_card_to_html(
+        latest.get("money_title", ""),
+        latest.get("money_summary", ""),
+        latest.get("money_enabled", False)
     )
 })
 
@@ -128,25 +127,22 @@ archive_output = render(archive_template, archive_page_data)
 (dist_archive_dir / "index.html").write_text(archive_output, encoding="utf-8")
 
 edition_data = latest.copy()
-
 edition_data.update({
     "styles_path": "../assets/styles.css",
     "script_path": "../assets/app.js",
     "home_path": "../index.html",
     "archive_path": "../archive/index.html",
-    "at_a_glance_html": latest.get("at_a_glance_html", ""),
     "world_items_html": story_items_to_html(latest.get("world_items", [])),
     "sg_items_html": story_items_to_html(latest.get("sg_items", [])),
     "book_lessons_html": bullets_to_html(latest.get("book_lessons", [])),
-    "money_card_html": money_card_to_html(
-    latest.get("money_title", ""),
-    latest.get("money_summary", ""),
-    latest.get("money_enabled", False)
-),
-And in ed
     "language_review_html": review_to_html(
         latest.get("language_review_phrase", ""),
         latest.get("language_review_meaning", "")
+    ),
+    "money_card_html": money_card_to_html(
+        latest.get("money_title", ""),
+        latest.get("money_summary", ""),
+        latest.get("money_enabled", False)
     )
 })
 
