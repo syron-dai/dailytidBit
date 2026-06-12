@@ -27,13 +27,13 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Generate daily edition
-        run: python scripts/generate_daily.py
-
       - name: Archive previous edition
         run: python scripts/archive_previous.py
 
-      - name: Build site
+      - name: Generate daily edition
+        run: python scripts/generate_daily.py
+
+      - name: Build static site
         run: python scripts/build_site.py
 
       - name: Upload Pages artifact
