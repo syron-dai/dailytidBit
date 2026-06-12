@@ -59,7 +59,7 @@ def money_card_to_html(title, summary, enabled):
     if not enabled:
         return ""
     return f"""
-    <section class="card half-card">
+    <section class="card content-card">
       <p class="section-label">Money & life</p>
       <h2>{title}</h2>
       <p>{summary}</p>
