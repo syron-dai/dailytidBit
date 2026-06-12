@@ -33,20 +33,20 @@
     </div>
   </header>
 
-  <main id="main" class="layout">
+  <main id="main" class="brief-grid">
     <section class="card top-story">
       <p class="section-label">Top story</p>
       <h2>{{top_story_title}}</h2>
       <p class="hero-summary">{{top_story_summary}}</p>
     </section>
 
-    <section class="card half-card">
+    <section class="card news-card">
       <p class="section-label">World</p>
       <h2>Elsewhere in the world</h2>
       {{world_items_html}}
     </section>
 
-    <section class="card half-card">
+    <section class="card news-card">
       <p class="section-label">Singapore</p>
       <h2>What matters locally</h2>
       {{sg_items_html}}
@@ -54,7 +54,7 @@
 
     {{money_card_html}}
 
-    <section class="card half-card">
+    <section class="card content-card">
       <p class="section-label">Book of the day</p>
       <h2>{{book_name}}</h2>
       <p class="meta">By {{book_author}}</p>
@@ -63,7 +63,7 @@
       <p class="reflection"><strong>Reflect:</strong> {{book_reflection}}</p>
     </section>
 
-    <section class="card half-card">
+    <section class="card content-card">
       <p class="section-label">Language</p>
       <h2>{{language_focus}}</h2>
       <p class="meta">Lesson {{language_lesson_number}}</p>
@@ -75,7 +75,7 @@
       {{language_review_html}}
     </section>
 
-    <section class="card half-card">
+    <section class="card content-card">
       <p class="section-label">AI update</p>
       <h2>{{ai_tool_name}}</h2>
       <p>{{ai_tool_update}}</p>
