@@ -31,50 +31,59 @@ archive_template = (templates_dir / "archive.html").read_text(encoding="utf-8")
 styles = (assets_dir / "styles.css").read_text(encoding="utf-8")
 appjs = (assets_dir / "app.js").read_text(encoding="utf-8")
 
-for placeholder, value in latest.items():
-    home_template = home_template.replace("{{" + placeholder + "}}", str(value))
-
-(dist_dir / "index.html").write_text(home_template, encoding="utf-8")
 (dist_assets_dir / "styles.css").write_text(styles, encoding="utf-8")
 (dist_assets_dir / "app.js").write_text(appjs, encoding="utf-8")
 
+def render(template, data):
+    output = template
+    for key, value in data.items():
+        output = output.replace("{{" + key + "}}", str(value))
+    return output
+
+root_page_data = latest.copy()
+root_page_data.update({
+    "styles_path": "./assets/styles.css",
+    "script_path": "./assets/app.js",
+    "home_path": "./index.html",
+    "archive_path": "./archive/index.html",
+    "language_romanization": latest.get("language_romanization", "Add romanization here")
+})
+
+index_output = render(home_template, root_page_data)
+(dist_dir / "index.html").write_text(index_output, encoding="utf-8")
+
 archive_rows = []
 for item in history:
-    row = f'''
-    <article class="archive-row">
-      <p class="archive-date">{item.get("date", "")}</p>
+    archive_rows.append(f"""
+    <article class="archive-entry">
+      <p class="meta">{item.get("date", "")}</p>
       <div>
         <h2><a href="../editions/{item.get("date", "")}.html">{item.get("title", "Daily Brief")}</a></h2>
         <p>{item.get("summary", "")}</p>
       </div>
     </article>
-    '''
-    archive_rows.append(row)
+    """)
 
-archive_output = archive_template
-archive_output = archive_output.replace(
-    """
-    <article class="archive-row">
-      <p class="archive-date">12 Jun 2026</p>
-      <div>
-        <h2><a href="../editions/2026-06-12.html">The edition title for that day</a></h2>
-        <p>Top headline, featured book, and language focus.</p>
-      </div>
-    </article>
+archive_page_data = {
+    "styles_path": "../assets/styles.css",
+    "script_path": "../assets/app.js",
+    "home_path": "../index.html",
+    "archive_path": "./index.html",
+    "archive_rows": "\n".join(archive_rows) if archive_rows else "<p>No archived editions yet.</p>"
+}
 
-    <article class="archive-row">
-      <p class="archive-date">11 Jun 2026</p>
-      <div>
-        <h2><a href="../editions/2026-06-11.html">Another edition title</a></h2>
-        <p>Short archive description generated from the daily content.</p>
-      </div>
-    </article>
-    """,
-    "\n".join(archive_rows) if archive_rows else "<p>No archived editions yet.</p>"
-)
-
+archive_output = render(archive_template, archive_page_data)
 (dist_archive_dir / "index.html").write_text(archive_output, encoding="utf-8")
 
-edition_template = home_template
+edition_data = latest.copy()
+edition_data.update({
+    "styles_path": "../assets/styles.css",
+    "script_path": "../assets/app.js",
+    "home_path": "../index.html",
+    "archive_path": "../archive/index.html",
+    "language_romanization": latest.get("language_romanization", "Add romanization here")
+})
+
+edition_output = render(home_template, edition_data)
 edition_date = latest.get("date", "latest")
-(dist_editions_dir / f"{edition_date}.html").write_text(edition_template, encoding="utf-8")
+(dist_editions_dir / f"{edition_date}.html").write_text(edition_output, encoding="utf-8")
