@@ -55,11 +55,12 @@ def fetch_rss_items(url, limit=5):
             title = clean_html(item.findtext("title", default="").strip())
             description = clean_html(item.findtext("description", default="").strip())
             link = item.findtext("link", default="").strip()
-            items.append({
-                "title": title,
-                "summary": description,
-                "link": link
-            })
+            if title:
+                items.append({
+                    "title": title,
+                    "summary": description,
+                    "link": link
+                })
         return items
     except Exception:
         return []
@@ -102,12 +103,12 @@ review_lesson = japanese_lessons[max(0, lesson_idx - 1)] if japanese_lessons els
 
 world_feed = "http://newsrss.bbc.co.uk/rss/newsonline_uk_edition/world/rss.xml"
 sg_feed = "https://www.channelnewsasia.com/api/v1/rss-outbound-feed?_format=xml&category=10416"
-money_feed = "https://www.financeasia.com/rss/latest"
+money_feed = "https://www.businesstimes.com.sg/rss-feeds"
 ai_feed = "https://openai.com/news/rss.xml"
 
 raw_world_items = fetch_rss_items(world_feed, limit=4)
 raw_sg_items = fetch_rss_items(sg_feed, limit=3)
-raw_money_items = fetch_rss_items(money_feed, limit=2)
+raw_money_items = fetch_rss_items(money_feed, limit=3)
 raw_ai_items = fetch_rss_items(ai_feed, limit=2)
 
 top_source = raw_world_items[0] if raw_world_items else {"title": "Daily Brief", "summary": "Your daily update is ready."}
@@ -122,11 +123,14 @@ sg_items = [
     for item in raw_sg_items[:2]
 ]
 
-money_item = (
-    {"title": raw_money_items[0]["title"], "summary": make_summary(raw_money_items[0], 320)}
-    if raw_money_items else
-    {"title": "Money & life watch", "summary": "A practical finance or lifestyle item will appear here once a suitable source is available."}
-)
+money_item = None
+if raw_money_items:
+    first_money = raw_money_items[0]
+    if first_money.get("title") and first_money.get("summary"):
+        money_item = {
+            "title": first_money["title"],
+            "summary": make_summary(first_money, 320)
+        }
 
 history = load_json(history_path, [])
 
@@ -142,17 +146,13 @@ if latest_path.exists():
 
 latest = {
     "date": today,
-    "at_a_glance_html": """
-<li>One top global story to anchor the day.</li>
-<li>Two quick local and world developments worth knowing.</li>
-<li>One practical money, AI, and learning takeaway.</li>
-""",
     "top_story_title": top_source["title"],
     "top_story_summary": make_summary(top_source, 520),
     "world_items": world_items,
     "sg_items": sg_items,
-    "money_title": money_item["title"],
-    "money_summary": money_item["summary"],
+    "money_enabled": bool(money_item),
+    "money_title": money_item["title"] if money_item else "",
+    "money_summary": money_item["summary"] if money_item else "",
     "book_name": book["title"],
     "book_author": book["author"],
     "book_summary": book["summary"],
