@@ -1,0 +1,38 @@
+[
+  {
+    "title": "Atomic Habits",
+    "author": "James Clear",
+    "summary": "Small repeated actions shape identity more effectively than dramatic one-off effort.",
+    "lessons": [
+      "Make good habits obvious and easy.",
+      "Reduce friction for actions you want to repeat.",
+      "Focus on identity, not just outcomes.",
+      "Track systems, not just goals."
+    ],
+    "reflection": "What is one tiny behaviour you can repeat daily this week?"
+  },
+  {
+    "title": "The Happiness Advantage",
+    "author": "Shawn Achor",
+    "summary": "Happiness fuels better performance, stronger resilience, and more creative thinking.",
+    "lessons": [
+      "Positive emotion can improve work quality and persistence.",
+      "Train your mind to notice progress and gratitude.",
+      "Small mindset habits compound over time.",
+      "Your environment shapes how optimistic and focused you feel."
+    ],
+    "reflection": "What is one thing that already went well today?"
+  },
+  {
+    "title": "Mindset",
+    "author": "Carol S. Dweck",
+    "summary": "A growth mindset helps people treat ability as improvable through effort, strategy, and feedback.",
+    "lessons": [
+      "Do not confuse current performance with fixed potential.",
+      "Feedback is useful information, not a verdict.",
+      "Effort matters most when tied to adjustment and learning.",
+      "Leaders shape culture through the mindset they reward."
+    ],
+    "reflection": "Where can you replace self-judgment with experimentation?"
+  }
+]
