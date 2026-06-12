@@ -112,6 +112,7 @@ archive_output = render(archive_template, archive_page_data)
 (dist_archive_dir / "index.html").write_text(archive_output, encoding="utf-8")
 
 edition_data = latest.copy()
+
 edition_data.update({
     "styles_path": "../assets/styles.css",
     "script_path": "../assets/app.js",
