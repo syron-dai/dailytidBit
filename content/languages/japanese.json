@@ -1,0 +1,47 @@
+[
+  {
+    "lesson_number": 1,
+    "phrase": "おはようございます",
+    "romanization": "ohayou gozaimasu",
+    "meaning": "Good morning.",
+    "usage": "Use this as a polite greeting in the morning.",
+    "example": "Say this when greeting a colleague in the morning.",
+    "review_after_days": 2
+  },
+  {
+    "lesson_number": 2,
+    "phrase": "ありがとうございます",
+    "romanization": "arigatou gozaimasu",
+    "meaning": "Thank you.",
+    "usage": "Use this in polite daily situations to express thanks.",
+    "example": "Say this after someone helps you with a task.",
+    "review_after_days": 2
+  },
+  {
+    "lesson_number": 3,
+    "phrase": "おつかれさまです",
+    "romanization": "otsukaresama desu",
+    "meaning": "Thanks for your hard work.",
+    "usage": "Use this with colleagues after meetings, tasks, or at the end of the day.",
+    "example": "Say this after a team discussion ends.",
+    "review_after_days": 3
+  },
+  {
+    "lesson_number": 4,
+    "phrase": "よろしくお願いします",
+    "romanization": "yoroshiku onegaishimasu",
+    "meaning": "Please take care of this / I appreciate your help.",
+    "usage": "Use this when asking for cooperation or beginning a working relationship.",
+    "example": "Say this when introducing yourself to a new teammate.",
+    "review_after_days": 3
+  },
+  {
+    "lesson_number": 5,
+    "phrase": "すみません",
+    "romanization": "sumimasen",
+    "meaning": "Excuse me / Sorry.",
+    "usage": "Use this to get attention, apologize lightly, or be polite.",
+    "example": "Say this before asking a question.",
+    "review_after_days": 2
+  }
+]
