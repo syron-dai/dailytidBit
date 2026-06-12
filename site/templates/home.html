@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Amanda's Daily Brief</title>
+  <title>Daily Brief</title>
   <meta name="description" content="A personal daily newspaper with world news, Singapore updates, AI tools, books, language learning, and puzzles.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,16 +34,21 @@
   </header>
 
   <main id="main" class="layout">
-    <section class="hero card">
-      <p class="section-label">Lead story</p>
-      <h2>{{lead_title}}</h2>
-      <p class="hero-summary">{{lead_summary}}</p>
-      {{lead_points_html}}
+    <section class="hero card hero-wide">
+      <p class="section-label">Top story</p>
+      <h2>{{top_story_title}}</h2>
+      <p class="hero-summary">{{top_story_summary}}</p>
+      <div class="why-box">
+        <p class="meta">Why it matters</p>
+        <ul class="bullet-list">
+          {{top_story_why_html}}
+        </ul>
+      </div>
     </section>
 
     <section class="panel card">
       <p class="section-label">World</p>
-      <h2>What happened globally</h2>
+      <h2>Elsewhere in the world</h2>
       {{world_items_html}}
     </section>
 
