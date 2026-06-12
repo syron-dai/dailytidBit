@@ -70,12 +70,16 @@ def render(template, data):
     return output
 
 root_page_data = latest.copy()
+
 root_page_data.update({
-    "styles_path": "./assets/styles.css",
-    "script_path": "./assets/app.js",
-    "home_path": "./index.html",
-    "archive_path": "./archive/index.html",
-    "language_romanization": latest.get("language_romanization", "Add romanization here")
+    "lead_points_html": bullets_to_html(latest.get("lead_points", [])),
+    "world_items_html": story_items_to_html(latest.get("world_items", [])),
+    "sg_items_html": story_items_to_html(latest.get("sg_items", [])),
+    "book_lessons_html": bullets_to_html(latest.get("book_lessons", [])),
+    "language_review_html": review_to_html(
+        latest.get("language_review_phrase", ""),
+        latest.get("language_review_meaning", "")
+    )
 })
 
 index_output = render(home_template, root_page_data)
