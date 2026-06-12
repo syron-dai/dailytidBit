@@ -7,43 +7,40 @@
   <meta name="description" content="Archive of previous Daily Brief editions.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{styles_path}}">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <header class="masthead masthead-compact">
-    <div>
-      <p class="eyebrow">Archive</p>
-      <h1>Previous Editions</h1>
-    </div>
-    <div class="masthead-meta">
-      <nav aria-label="Primary">
-        <a href="../index.html">Today</a>
-        <a href="./index.html" aria-current="page">History</a>
-      </nav>
+  <header class="site-header archive-header">
+    <div class="masthead-top">
+      <p class="edition-kicker">Daily Brief archive</p>
       <button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch theme">◐</button>
+    </div>
+
+    <div class="masthead-main">
+      <div>
+        <p class="dateline">Past editions</p>
+        <h1>Archive</h1>
+        <p class="tagline">Browse earlier newsletters by date.</p>
+      </div>
+
+      <nav class="main-nav" aria-label="Primary">
+        <a href="{{home_path}}">Today</a>
+        <a href="{{archive_path}}" aria-current="page">Archive</a>
+      </nav>
     </div>
   </header>
 
-  <main id="main" class="archive-listing">
-    <article class="archive-row">
-      <p class="archive-date">12 Jun 2026</p>
-      <div>
-        <h2><a href="../editions/2026-06-12.html">The edition title for that day</a></h2>
-        <p>Top headline, featured book, and language focus.</p>
-      </div>
-    </article>
-
-    <article class="archive-row">
-      <p class="archive-date">11 Jun 2026</p>
-      <div>
-        <h2><a href="../editions/2026-06-11.html">Another edition title</a></h2>
-        <p>Short archive description generated from the daily content.</p>
-      </div>
-    </article>
+  <main id="main" class="archive-layout">
+    {{archive_rows}}
   </main>
-  <script src="../assets/app.js" defer></script>
+
+  <footer class="site-footer">
+    <p><a href="{{home_path}}">Return to today’s edition</a></p>
+  </footer>
+
+  <script src="{{script_path}}" defer></script>
 </body>
 </html>
