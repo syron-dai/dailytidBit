@@ -25,7 +25,36 @@ if history_path.exists():
         history = json.load(f)
 else:
     history = []
+    
+def story_items_to_html(items):
+    if not items:
+        return "<p>No items available today.</p>"
+    blocks = []
+    for item in items:
+        blocks.append(f"""
+        <article class="story">
+          <h3>{item.get('title', '')}</h3>
+          <p>{item.get('summary', '')}</p>
+        </article>
+        """)
+    return "\n".join(blocks)
 
+def bullets_to_html(items):
+    if not items:
+        return ""
+    lis = "".join(f"<li>{item}</li>" for item in items)
+    return f'<ul class="bullet-list">{lis}</ul>'
+
+def review_to_html(phrase, meaning):
+    if not phrase:
+        return ""
+    return f'''
+    <div class="review-box">
+      <p class="meta">Quick review</p>
+      <p><strong>{phrase}</strong> — {meaning}</p>
+    </div>
+    '''
+    
 home_template = (templates_dir / "home.html").read_text(encoding="utf-8")
 archive_template = (templates_dir / "archive.html").read_text(encoding="utf-8")
 styles = (assets_dir / "styles.css").read_text(encoding="utf-8")
