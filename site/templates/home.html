@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daily Brief</title>
+  <title>Amanda's Daily Brief</title>
   <meta name="description" content="A personal daily newspaper with world news, Singapore updates, AI tools, books, language learning, and puzzles.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,41 +38,19 @@
       <p class="section-label">Lead story</p>
       <h2>{{lead_title}}</h2>
       <p class="hero-summary">{{lead_summary}}</p>
-      <ul class="bullet-list">
-        <li>{{lead_point_1}}</li>
-        <li>{{lead_point_2}}</li>
-        <li>{{lead_impact}}</li>
-      </ul>
+      {{lead_points_html}}
     </section>
 
     <section class="panel card">
       <p class="section-label">World</p>
       <h2>What happened globally</h2>
-
-      <article class="story">
-        <h3>{{world_story_1_title}}</h3>
-        <p>{{world_story_1_summary}}</p>
-      </article>
-
-      <article class="story">
-        <h3>{{world_story_2_title}}</h3>
-        <p>{{world_story_2_summary}}</p>
-      </article>
+      {{world_items_html}}
     </section>
 
     <section class="panel card">
       <p class="section-label">Singapore</p>
       <h2>What matters locally</h2>
-
-      <article class="story">
-        <h3>{{sg_story_1_title}}</h3>
-        <p>{{sg_story_1_summary}}</p>
-      </article>
-
-      <article class="story">
-        <h3>{{sg_story_2_title}}</h3>
-        <p>{{sg_story_2_summary}}</p>
-      </article>
+      {{sg_items_html}}
     </section>
 
     <section class="feature card">
@@ -80,27 +58,27 @@
       <h2>{{book_name}}</h2>
       <p class="meta">By {{book_author}}</p>
       <p>{{book_summary}}</p>
-      <ul class="bullet-list">
-        <li>{{book_lesson_1}}</li>
-        <li>{{book_lesson_2}}</li>
-        <li>{{book_lesson_3}}</li>
-      </ul>
+      {{book_lessons_html}}
+      <p class="reflection"><strong>Reflect:</strong> {{book_reflection}}</p>
     </section>
 
     <section class="feature card">
       <p class="section-label">Language</p>
       <h2>{{language_focus}}</h2>
+      <p class="meta">Lesson {{language_lesson_number}}</p>
       <p class="phrase">{{language_phrase}}</p>
       <p class="romanization">{{language_romanization}}</p>
-      <p>{{language_meaning}}</p>
-      <p class="meta">{{language_note}}</p>
+      <p><strong>Meaning:</strong> {{language_meaning}}</p>
+      <p><strong>Use it when:</strong> {{language_usage}}</p>
+      <p><strong>Example:</strong> {{language_example}}</p>
+      {{language_review_html}}
     </section>
 
     <section class="feature card">
-      <p class="section-label">AI tool</p>
+      <p class="section-label">AI update</p>
       <h2>{{ai_tool_name}}</h2>
       <p>{{ai_tool_update}}</p>
-      <p class="meta">Use case: {{ai_tool_use_case}}</p>
+      <p class="meta">{{ai_tool_use_case}}</p>
     </section>
 
     <section class="feature card">
