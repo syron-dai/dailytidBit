@@ -35,6 +35,7 @@ sample = {
     "book_lesson_3": "Focus on identity, not just outcomes.",
     "language_focus": "Japanese",
     "language_phrase": "おつかれさまです",
+    "language_romanization": "otsukaresama desu",
     "language_meaning": "A common phrase meaning thank you for your hard work.",
     "language_note": "Start with one main language at a time, then rotate others lightly.",
     "ai_tool_name": "ChatGPT",
