@@ -1,0 +1,46 @@
+name: Build Daily Brief
+
+on:
+  schedule:
+    - cron: "0 23 * * *"   # 7:00 AM Singapore time = 23:00 UTC previous day
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate daily edition
+        run: python scripts/generate_daily.py
+
+      - name: Archive previous edition
+        run: python scripts/archive_previous.py
+
+      - name: Build site
+        run: python scripts/build_site.py
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
