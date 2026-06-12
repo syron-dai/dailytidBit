@@ -38,7 +38,7 @@ def clean_html(text):
     text = re.sub(r"\s+", " ", text).strip()
     return text
 
-def shorten(text, limit=260):
+def shorten(text, limit=420):
     text = clean_html(text)
     if len(text) <= limit:
         return text
@@ -70,35 +70,8 @@ def stable_index(seed_text, length):
     digest = hashlib.md5(seed_text.encode("utf-8")).hexdigest()
     return int(digest, 16) % length
 
-def build_top_story(item):
-    title = item.get("title", "Top story")
-    summary = shorten(item.get("summary", ""), 340)
-    why_points = [
-        "This is one of the day’s most notable developments and helps set the tone for the broader news cycle.",
-        "It is worth watching for follow-up details, official responses, or wider knock-on effects."
-    ]
-    return {
-        "title": title,
-        "summary": summary,
-        "why_points": why_points
-    }
-
-def enrich_story(item, region="world"):
-    title = item.get("title", "")
-    summary = shorten(item.get("summary", ""), 280)
-
-    if region == "singapore":
-        add_on = "For Singapore readers, the useful question is what this could mean for safety, policy, transport, work, or day-to-day life."
-    elif region == "money":
-        add_on = "The practical angle here is how this may affect travel costs, prices, savings, investing sentiment, or consumer decisions."
-    else:
-        add_on = "The useful angle here is what this could mean for geopolitics, markets, public safety, or the wider international picture."
-
-    combined = f"{summary} {add_on}".strip()
-    return {
-        "title": title,
-        "summary": combined
-    }
+def make_summary(item, limit=340):
+    return shorten(item.get("summary", ""), limit)
 
 books = load_json(content_dir / "books.json", [])
 japanese_lessons = load_json(languages_dir / "japanese.json", [])
@@ -122,14 +95,10 @@ language = japanese_lessons[lesson_idx] if japanese_lessons else {
     "romanization": "otsukaresama desu",
     "meaning": "Thanks for your hard work.",
     "usage": "Use this with colleagues after meetings or work.",
-    "example": "Say this at the end of the workday.",
-    "review_after_days": 2
+    "example": "Say this at the end of the workday."
 }
 
-review_lesson = None
-if japanese_lessons:
-    review_idx = max(0, lesson_idx - 1)
-    review_lesson = japanese_lessons[review_idx]
+review_lesson = japanese_lessons[max(0, lesson_idx - 1)] if japanese_lessons else None
 
 world_feed = "http://newsrss.bbc.co.uk/rss/newsonline_uk_edition/world/rss.xml"
 sg_feed = "https://www.channelnewsasia.com/api/v1/rss-outbound-feed?_format=xml&category=10416"
@@ -138,19 +107,26 @@ ai_feed = "https://openai.com/news/rss.xml"
 
 raw_world_items = fetch_rss_items(world_feed, limit=4)
 raw_sg_items = fetch_rss_items(sg_feed, limit=3)
-raw_money_items = fetch_rss_items(money_feed, limit=3)
-raw_ai_items = fetch_rss_items(ai_feed, limit=3)
+raw_money_items = fetch_rss_items(money_feed, limit=2)
+raw_ai_items = fetch_rss_items(ai_feed, limit=2)
 
 top_source = raw_world_items[0] if raw_world_items else {"title": "Daily Brief", "summary": "Your daily update is ready."}
-top_story = build_top_story(top_source)
 
-world_items = [enrich_story(item, "world") for item in raw_world_items[1:3]]
-sg_items = [enrich_story(item, "singapore") for item in raw_sg_items[:2]]
-money_item = enrich_story(raw_money_items[0], "money") if raw_money_items else {
-    "title": "Money & life watch",
-    "summary": "A practical finance or cost-of-living item will appear here once a suitable source is available."
-}
-ai_items = raw_ai_items[:2]
+world_items = [
+    {"title": item["title"], "summary": make_summary(item, 320)}
+    for item in raw_world_items[1:3]
+]
+
+sg_items = [
+    {"title": item["title"], "summary": make_summary(item, 320)}
+    for item in raw_sg_items[:2]
+]
+
+money_item = (
+    {"title": raw_money_items[0]["title"], "summary": make_summary(raw_money_items[0], 320)}
+    if raw_money_items else
+    {"title": "Money & life watch", "summary": "A practical finance or lifestyle item will appear here once a suitable source is available."}
+)
 
 history = load_json(history_path, [])
 
@@ -166,9 +142,13 @@ if latest_path.exists():
 
 latest = {
     "date": today,
-    "top_story_title": top_story["title"],
-    "top_story_summary": top_story["summary"],
-    "top_story_why_html": "".join(f"<li>{point}</li>" for point in top_story["why_points"]),
+    "at_a_glance_html": """
+<li>One top global story to anchor the day.</li>
+<li>Two quick local and world developments worth knowing.</li>
+<li>One practical money, AI, and learning takeaway.</li>
+""",
+    "top_story_title": top_source["title"],
+    "top_story_summary": make_summary(top_source, 520),
     "world_items": world_items,
     "sg_items": sg_items,
     "money_title": money_item["title"],
@@ -188,8 +168,8 @@ latest = {
     "language_review_phrase": review_lesson.get("phrase", "") if review_lesson else "",
     "language_review_meaning": review_lesson.get("meaning", "") if review_lesson else "",
     "ai_tool_name": "OpenAI News",
-    "ai_tool_update": ai_items[0]["title"] if ai_items else "No AI update found today.",
-    "ai_tool_use_case": shorten(ai_items[0]["summary"], 220) if ai_items else "Use AI to summarize and organize daily information."
+    "ai_tool_update": raw_ai_items[0]["title"] if raw_ai_items else "No AI update found today.",
+    "ai_tool_use_case": make_summary(raw_ai_items[0], 220) if raw_ai_items else "Use AI to summarize and organize daily information."
 }
 
 save_json(latest_path, latest)
