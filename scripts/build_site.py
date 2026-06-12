@@ -54,6 +54,16 @@ def review_to_html(phrase, meaning):
       <p><strong>{phrase}</strong> — {meaning}</p>
     </div>
     '''
+def money_card_to_html(title, summary, enabled):
+    if not enabled:
+        return ""
+    return f"""
+    <section class="card half-card">
+      <p class="section-label">Money & life</p>
+      <h2>{title}</h2>
+      <p>{summary}</p>
+    </section>
+    """
     
 home_template = (templates_dir / "home.html").read_text(encoding="utf-8")
 archive_template = (templates_dir / "archive.html").read_text(encoding="utf-8")
@@ -80,6 +90,11 @@ root_page_data.update({
     "world_items_html": story_items_to_html(latest.get("world_items", [])),
     "sg_items_html": story_items_to_html(latest.get("sg_items", [])),
     "book_lessons_html": bullets_to_html(latest.get("book_lessons", [])),
+    "money_card_html": money_card_to_html(
+    latest.get("money_title", ""),
+    latest.get("money_summary", ""),
+    latest.get("money_enabled", False)
+),
     "language_review_html": review_to_html(
         latest.get("language_review_phrase", ""),
         latest.get("language_review_meaning", "")
@@ -123,6 +138,12 @@ edition_data.update({
     "world_items_html": story_items_to_html(latest.get("world_items", [])),
     "sg_items_html": story_items_to_html(latest.get("sg_items", [])),
     "book_lessons_html": bullets_to_html(latest.get("book_lessons", [])),
+    "money_card_html": money_card_to_html(
+    latest.get("money_title", ""),
+    latest.get("money_summary", ""),
+    latest.get("money_enabled", False)
+),
+And in ed
     "language_review_html": review_to_html(
         latest.get("language_review_phrase", ""),
         latest.get("language_review_meaning", "")
