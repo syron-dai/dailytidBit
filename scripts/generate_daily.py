@@ -138,3 +138,53 @@ sg_feed = "https://www.channelnewsasia.com/api/v1/rss-outbound-feed?_format=xml&
 ai_feed = "https://openai.com/news/rss.xml"
 
 raw_world_items = fetch_rss_items(world_feed, limit=4)
+raw_sg_items = fetch_rss_items(sg_feed, limit=3)
+raw_ai_items = fetch_rss_items(ai_feed, limit=3)
+
+top_source = raw_world_items[0] if raw_world_items else {"title": "Daily Brief", "summary": "Your daily update is ready."}
+top_story = build_top_story(top_source, raw_world_items, raw_sg_items, raw_ai_items)
+
+world_items = [enrich_story(item, "world") for item in raw_world_items[1:3]]
+sg_items = [enrich_story(item, "singapore") for item in raw_sg_items[:2]]
+ai_items = raw_ai_items[:2]
+
+history = load_json(history_path, [])
+
+if latest_path.exists():
+    previous = load_json(latest_path, {})
+    prev_date = previous.get("date")
+    if prev_date and not any(item.get("date") == prev_date for item in history):
+        history.insert(0, {
+            "date": previous.get("date"),
+            "title": previous.get("top_story_title", previous.get("lead_title", "Daily Brief")),
+            "summary": previous.get("top_story_summary", previous.get("lead_summary", ""))
+        })
+
+latest = {
+    "date": today,
+    "top_story_title": top_story["title"],
+    "top_story_summary": top_story["summary"],
+    "top_story_why_html": "".join(f"<li>{point}</li>" for point in top_story["why_points"]),
+    "world_items": world_items,
+    "sg_items": sg_items,
+    "book_name": book["title"],
+    "book_author": book["author"],
+    "book_summary": book["summary"],
+    "book_lessons": book.get("lessons", []),
+    "book_reflection": book.get("reflection", ""),
+    "language_focus": "Japanese",
+    "language_lesson_number": language.get("lesson_number", 1),
+    "language_phrase": language.get("phrase", ""),
+    "language_romanization": language.get("romanization", ""),
+    "language_meaning": language.get("meaning", ""),
+    "language_usage": language.get("usage", ""),
+    "language_example": language.get("example", ""),
+    "language_review_phrase": review_lesson.get("phrase", "") if review_lesson else "",
+    "language_review_meaning": review_lesson.get("meaning", "") if review_lesson else "",
+    "ai_tool_name": "OpenAI News",
+    "ai_tool_update": ai_items[0]["title"] if ai_items else "No AI update found today.",
+    "ai_tool_use_case": shorten(ai_items[0]["summary"], 220) if ai_items else "Use AI to summarize and organize daily information."
+}
+
+save_json(latest_path, latest)
+save_json(history_path, history)
