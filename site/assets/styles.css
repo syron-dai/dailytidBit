@@ -169,6 +169,7 @@ h3 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.25rem;
   padding: 1.5rem 1rem 3rem;
+  align-items: start;
 }
 
 .card {
@@ -187,7 +188,7 @@ h3 {
 
 .news-card,
 .content-card {
-  min-width: 0;
+  grid-column: span 1;
 }
 
 .hero-summary {
@@ -272,6 +273,11 @@ h3 {
   }
 
   .top-story {
+    grid-column: auto;
+  }
+
+  .news-card,
+  .content-card {
     grid-column: auto;
   }
 
