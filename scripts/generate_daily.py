@@ -38,7 +38,7 @@ def clean_html(text):
     text = re.sub(r"\s+", " ", text).strip()
     return text
 
-def shorten(text, limit=220):
+def shorten(text, limit=260):
     text = clean_html(text)
     if len(text) <= limit:
         return text
@@ -70,36 +70,34 @@ def stable_index(seed_text, length):
     digest = hashlib.md5(seed_text.encode("utf-8")).hexdigest()
     return int(digest, 16) % length
 
-def build_top_story(item, world_items, sg_items, ai_items):
+def build_top_story(item):
     title = item.get("title", "Top story")
-    base = shorten(item.get("summary", ""), 320)
-
-    why = []
-    if world_items and len(world_items) > 1:
-        why.append(f"Also in world news: {world_items[1]['title']}")
-    if sg_items:
-        why.append(f"In Singapore: {sg_items[0]['title']}")
-    if ai_items:
-        why.append(f"In technology: {ai_items[0]['title']}")
-
+    summary = shorten(item.get("summary", ""), 340)
+    why_points = [
+        "This is one of the day’s most notable developments and helps set the tone for the broader news cycle.",
+        "It is worth watching for follow-up details, official responses, or wider knock-on effects."
+    ]
     return {
         "title": title,
-        "summary": base,
-        "why_points": why[:3]
+        "summary": summary,
+        "why_points": why_points
     }
 
 def enrich_story(item, region="world"):
     title = item.get("title", "")
-    summary = shorten(item.get("summary", ""), 260)
+    summary = shorten(item.get("summary", ""), 280)
 
     if region == "singapore":
-        detail = f"{summary} This matters locally because it may affect safety, operations, policy attention, or daily life in Singapore."
+        add_on = "For Singapore readers, the useful question is what this could mean for safety, policy, transport, work, or day-to-day life."
+    elif region == "money":
+        add_on = "The practical angle here is how this may affect travel costs, prices, savings, investing sentiment, or consumer decisions."
     else:
-        detail = f"{summary} This matters because it may influence geopolitics, markets, public safety, or international developments."
+        add_on = "The useful angle here is what this could mean for geopolitics, markets, public safety, or the wider international picture."
 
+    combined = f"{summary} {add_on}".strip()
     return {
         "title": title,
-        "summary": detail
+        "summary": combined
     }
 
 books = load_json(content_dir / "books.json", [])
@@ -135,17 +133,23 @@ if japanese_lessons:
 
 world_feed = "http://newsrss.bbc.co.uk/rss/newsonline_uk_edition/world/rss.xml"
 sg_feed = "https://www.channelnewsasia.com/api/v1/rss-outbound-feed?_format=xml&category=10416"
+money_feed = "https://www.financeasia.com/rss/latest"
 ai_feed = "https://openai.com/news/rss.xml"
 
 raw_world_items = fetch_rss_items(world_feed, limit=4)
 raw_sg_items = fetch_rss_items(sg_feed, limit=3)
+raw_money_items = fetch_rss_items(money_feed, limit=3)
 raw_ai_items = fetch_rss_items(ai_feed, limit=3)
 
 top_source = raw_world_items[0] if raw_world_items else {"title": "Daily Brief", "summary": "Your daily update is ready."}
-top_story = build_top_story(top_source, raw_world_items, raw_sg_items, raw_ai_items)
+top_story = build_top_story(top_source)
 
 world_items = [enrich_story(item, "world") for item in raw_world_items[1:3]]
 sg_items = [enrich_story(item, "singapore") for item in raw_sg_items[:2]]
+money_item = enrich_story(raw_money_items[0], "money") if raw_money_items else {
+    "title": "Money & life watch",
+    "summary": "A practical finance or cost-of-living item will appear here once a suitable source is available."
+}
 ai_items = raw_ai_items[:2]
 
 history = load_json(history_path, [])
@@ -156,8 +160,8 @@ if latest_path.exists():
     if prev_date and not any(item.get("date") == prev_date for item in history):
         history.insert(0, {
             "date": previous.get("date"),
-            "title": previous.get("top_story_title", previous.get("lead_title", "Daily Brief")),
-            "summary": previous.get("top_story_summary", previous.get("lead_summary", ""))
+            "title": previous.get("top_story_title", "Daily Brief"),
+            "summary": previous.get("top_story_summary", "")
         })
 
 latest = {
@@ -167,6 +171,8 @@ latest = {
     "top_story_why_html": "".join(f"<li>{point}</li>" for point in top_story["why_points"]),
     "world_items": world_items,
     "sg_items": sg_items,
+    "money_title": money_item["title"],
+    "money_summary": money_item["summary"],
     "book_name": book["title"],
     "book_author": book["author"],
     "book_summary": book["summary"],
