@@ -241,6 +241,16 @@ h3 {
   flex-wrap: wrap;
 }
 
+.hero-wide {
+  grid-column: span 8;
+}
+
+.why-box {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
 @media (max-width: 900px) {
   .masthead-main,
   .archive-entry {
@@ -256,6 +266,7 @@ h3 {
   }
 
   .hero,
+  .hero-wide,
   .panel,
   .feature {
     grid-column: auto;
