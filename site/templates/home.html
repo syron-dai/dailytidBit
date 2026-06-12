@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daily Brief</title>
+  <title>Amanda's Daily Brief</title>
   <meta name="description" content="A personal daily newspaper with world news, Singapore updates, AI tools, books, language learning, and puzzles.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -59,6 +59,12 @@
     </section>
 
     <section class="feature card">
+      <p class="section-label">Money & life</p>
+      <h2>{{money_title}}</h2>
+      <p>{{money_summary}}</p>
+    </section>
+
+    <section class="feature card">
       <p class="section-label">Book of the day</p>
       <h2>{{book_name}}</h2>
       <p class="meta">By {{book_author}}</p>
@@ -84,13 +90,6 @@
       <h2>{{ai_tool_name}}</h2>
       <p>{{ai_tool_update}}</p>
       <p class="meta">{{ai_tool_use_case}}</p>
-    </section>
-
-    <section class="feature card">
-      <p class="section-label">Puzzle</p>
-      <h2>Daily Sudoku</h2>
-      <p>A proper sudoku can be added later, but the slot is ready now.</p>
-      <div class="puzzle-box">9 × 9</div>
     </section>
   </main>
 
